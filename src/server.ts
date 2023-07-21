@@ -2,8 +2,6 @@ import 'reflect-metadata';
 import express from 'express';
 import dotenv from 'dotenv';
 import Debug from 'debug';
-
-// database
 import { DataSource } from 'typeorm';
 import { User } from './entities/User';
 import authRouter from './routers/authRouter';
@@ -14,15 +12,19 @@ import authenticator from './middleware/authenticator';
 
 // env
 dotenv.config();
+const env = process.env.NODE_ENV || 'dev';
+const DB_URL = env === 'test' ? process.env.DB_TEST_URL : process.env.DB_URL;
 const SERVER_PORT = process.env.SERVER_PORT;
 const APPLICATION_NAME = process.env.APPLICATION_NAME;
-const DB_URL = process.env.DB_URL;
 const DB_SYNCHRONIZE = process.env.DB_SYNCHRONIZE === 'true';
 const DB_LOGGING = process.env.DB_LOGGING === 'true';
 
 // debug
 const log = Debug('wl:server');
 const logError = Debug('wl:server:error');
+
+// init express app
+const app = express()
 
 // data-source preparation
 const appDataSource = new DataSource({
@@ -44,7 +46,6 @@ appDataSource
 
         // init express
         log('starting server');
-        const app = express()
         app.use(express.json());
 
         // init middlewares
@@ -56,10 +57,11 @@ appDataSource
 
         app.listen(SERVER_PORT, () => {
             log(`${APPLICATION_NAME} listening on port ${SERVER_PORT}`);
+            app.emit('app-started-event');
         })
     })
     .catch((err) => {
         logError(`could not initialize datasource`, err);
     });
 
-export default appDataSource;
+export { appDataSource, app };
