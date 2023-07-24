@@ -50,5 +50,31 @@ worklogRouter.post('/', async (req, res) => {
 
 });
 
+worklogRouter.get('/', async (req, res) => {
+    // extract data
+    const username = req.query.username;
+
+    // basic validations
+    if (!username) {
+        log('no username');
+        return res.status(400).json({ message: 'username required' });
+    }
+
+    // get worklogs
+    try {
+        const worklogs = await appDataSource.getRepository(Worklog).find({
+            where: {
+                username: username as string
+            }
+        });
+        log('worklogs retrieved');
+        return res.status(200).json(worklogs);
+    } catch (err) {
+        log(err);
+        return res.status(422).json({ message: `error code ${err.code}` });
+    }
+
+});
+
 
 export default worklogRouter;

@@ -12,7 +12,7 @@ const authenticator = (req: Request, res: Response, next: NextFunction) => {
 
 
     let isWorklog = false;
-    if (req.method === 'POST' && req.path === '/logwork/') {
+    if (req.path === '/logwork') {
         isWorklog = true;
     }
 
@@ -28,8 +28,13 @@ const authenticator = (req: Request, res: Response, next: NextFunction) => {
 
         // TODO: verify against the database once again
         //  as someone might delete the user after the token is generated
+
         if (isWorklog) {
-            req.body.username = payload.username;
+            if (req.method === 'GET') {
+                req.query.username = payload.username;
+            } else if (req.method === 'POST') {
+                req.body.username = payload.username;
+            }
         }
     });
 
