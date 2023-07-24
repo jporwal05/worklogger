@@ -13,7 +13,7 @@ before((done) => {
     });
 });
 
-describe('logwork', () => {
+describe('worklog', () => {
     afterEach(async () => {
         await appDataSource.getRepository(User).delete({});
         await appDataSource.getRepository(Worklog).delete({});
@@ -37,20 +37,20 @@ describe('logwork', () => {
                 chai.request(app)
                     .post("/auth/signin")
                     .send(testUser)
-                    .end((err, res) => {
-                        token = res.body.token;
-                        expect(res).to.have.status(200);
+                    .end((err2, res2) => {
+                        token = res2.body.token;
+                        expect(res2).to.have.status(200);
 
                         const worklog = {
                             date: "2023-07-21"
                         };
                         // logwork
                         chai.request(app)
-                            .post('/logwork')
+                            .post('/worklog')
                             .send(worklog)
                             .auth(token, { type: 'bearer' })
-                            .end((err, res) => {
-                                expect(res).to.have.status(400);
+                            .end((err3, res3) => {
+                                expect(res3).to.have.status(400);
                                 done();
                             });
                     });
@@ -76,20 +76,20 @@ describe('logwork', () => {
                 chai.request(app)
                     .post("/auth/signin")
                     .send(testUser)
-                    .end((err, res) => {
-                        token = res.body.token;
-                        expect(res).to.have.status(200);
+                    .end((err2, res2) => {
+                        token = res2.body.token;
+                        expect(res2).to.have.status(200);
 
                         const worklog = {
                             log: ["did this", "did that"]
                         };
                         // logwork
                         chai.request(app)
-                            .post('/logwork')
+                            .post('/worklog')
                             .send(worklog)
                             .auth(token, { type: 'bearer' })
-                            .end((err, res) => {
-                                expect(res).to.have.status(400);
+                            .end((err3, res3) => {
+                                expect(res3).to.have.status(400);
                                 done();
                             });
                     });
@@ -114,9 +114,9 @@ describe('logwork', () => {
                 chai.request(app)
                     .post("/auth/signin")
                     .send(testUser)
-                    .end((err, res) => {
-                        token = res.body.token;
-                        expect(res).to.have.status(200);
+                    .end((err2, res2) => {
+                        token = res2.body.token;
+                        expect(res2).to.have.status(200);
 
                         const worklog = {
                             log: ["did this", "did that"],
@@ -124,11 +124,11 @@ describe('logwork', () => {
                         };
                         // logwork
                         chai.request(app)
-                            .post('/logwork')
+                            .post('/worklog')
                             .send(worklog)
                             .auth(token, { type: 'bearer' })
-                            .end((err, res) => {
-                                expect(res).to.have.status(200);
+                            .end((err3, res3) => {
+                                expect(res3).to.have.status(200);
                                 done();
                             });
                     });
@@ -153,9 +153,9 @@ describe('logwork', () => {
                 chai.request(app)
                     .post("/auth/signin")
                     .send(testUser)
-                    .end((err, res) => {
-                        token = res.body.token;
-                        expect(res).to.have.status(200);
+                    .end((err2, res2) => {
+                        token = res2.body.token;
+                        expect(res2).to.have.status(200);
 
                         const worklog = {
                             log: ["did this", "did that"],
@@ -163,10 +163,10 @@ describe('logwork', () => {
                         };
                         // get all worklogs
                         chai.request(app)
-                            .get('/logwork')
+                            .get('/worklog')
                             .auth(token, { type: 'bearer' })
-                            .end((err, res) => {
-                                expect(res).to.have.status(200);
+                            .end((err3, res3) => {
+                                expect(res3).to.have.status(200);
                                 done();
                             });
                     });

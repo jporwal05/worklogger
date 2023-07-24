@@ -12,7 +12,7 @@ const authenticator = (req: Request, res: Response, next: NextFunction) => {
 
 
     let isWorklog = false;
-    if (req.path === '/logwork') {
+    if (req.path === '/worklog') {
         isWorklog = true;
     }
 

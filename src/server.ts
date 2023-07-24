@@ -53,7 +53,7 @@ appDataSource
 
         // init routes
         app.use('/auth', authRouter);
-        app.use('/logwork', worklogRouter);
+        app.use('/worklog', worklogRouter);
 
         app.listen(SERVER_PORT, () => {
             log(`${APPLICATION_NAME} listening on port ${SERVER_PORT}`);
