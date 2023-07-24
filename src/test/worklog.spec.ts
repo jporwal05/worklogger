@@ -1,9 +1,8 @@
 import chai, { expect } from 'chai';
-import { app } from '../server';
+import { app, appDataSource } from '../server';
 import chaihttp from 'chai-http';
-import Debug from 'debug';
-
-const log = Debug('wl:test:worklog');
+import { User } from '../entities/User';
+import { Worklog } from '../entities/Worklog';
 
 chai.use(chaihttp);
 
@@ -13,21 +12,125 @@ before((done) => {
     });
 });
 
-// TODO: will have to use a dummy database for this purpose
-// https://stackoverflow.com/questions/59858287/testing-jwt-authentication-using-mocha-and-chai
+describe('logwork', () => {
+    afterEach(async () => {
+        await appDataSource.getRepository(User).delete({});
+        await appDataSource.getRepository(Worklog).delete({});
+    });
 
-/* describe('/POST logwork', () => {
-    it('it should not POST a work log if there is no log', (done) => {
-        const worklog = {
-            date: "2023-07-21",
-            username: "someUsername"
-        }
+    it('should signup, signin but should not log work if there is no log', (done) => {
+        const testUser = {
+            "username": "jp0505",
+            "email": "some@email.com",
+            "password": "jp0505"
+        };
+        // signup
         chai.request(app)
-            .post('/logwork')
-            .send(worklog)
+            .post("/auth/signup")
+            .send(testUser)
             .end((err, res) => {
-                expect(res).to.have.status(400);
-                done();
+                expect(res).to.have.status(200);
+
+                let token: string;
+                // signin
+                chai.request(app)
+                    .post("/auth/signin")
+                    .send(testUser)
+                    .end((err, res) => {
+                        token = res.body.token;
+                        expect(res).to.have.status(200);
+
+                        const worklog = {
+                            date: "2023-07-21"
+                        };
+                        // logwork
+                        chai.request(app)
+                            .post('/logwork')
+                            .send(worklog)
+                            .auth(token, { type: 'bearer' })
+                            .end((err, res) => {
+                                expect(res).to.have.status(400);
+                                done();
+                            });
+                    });
             });
     });
-}) */
+
+
+    it('should signup, signin but should not log work if there is no date', (done) => {
+        const testUser = {
+            "username": "jp0505",
+            "email": "some@email.com",
+            "password": "jp0505"
+        };
+        // signup
+        chai.request(app)
+            .post("/auth/signup")
+            .send(testUser)
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+
+                let token: string;
+                // signin
+                chai.request(app)
+                    .post("/auth/signin")
+                    .send(testUser)
+                    .end((err, res) => {
+                        token = res.body.token;
+                        expect(res).to.have.status(200);
+
+                        const worklog = {
+                            log: ["did this", "did that"]
+                        };
+                        // logwork
+                        chai.request(app)
+                            .post('/logwork')
+                            .send(worklog)
+                            .auth(token, { type: 'bearer' })
+                            .end((err, res) => {
+                                expect(res).to.have.status(400);
+                                done();
+                            });
+                    });
+            });
+    });
+
+    it('should signup, signin and log work', (done) => {
+        const testUser = {
+            "username": "jp0505",
+            "email": "some@email.com",
+            "password": "jp0505"
+        };
+        // signup
+        chai.request(app)
+            .post("/auth/signup")
+            .send(testUser)
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+
+                let token: string;
+                // signin
+                chai.request(app)
+                    .post("/auth/signin")
+                    .send(testUser)
+                    .end((err, res) => {
+                        token = res.body.token;
+                        expect(res).to.have.status(200);
+
+                        const worklog = {
+                            log: ["did this", "did that"],
+                            date: "2023-07-21"
+                        };
+                        // logwork
+                        chai.request(app)
+                            .post('/logwork')
+                            .send(worklog)
+                            .auth(token, { type: 'bearer' })
+                            .end((err, res) => {
+                                expect(res).to.have.status(200);
+                                done();
+                            });
+                    });
+            });
+    });
+});

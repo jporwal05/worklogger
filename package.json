@@ -8,7 +8,7 @@
     "build": "tsc",
     "prestart": "npm run build",
     "start": "DEBUG=wl:* npx nodemon .",
-    "test": "export NODE_ENV=test && DEBUG=wl:* mocha --require ts-node/register src/test/**/*.spec.ts --timeout=5000"
+    "test": "export NODE_ENV=test && DEBUG=wl:* mocha --require ts-node/register src/test/**/*.spec.ts --timeout=20000"
   },
   "keywords": [
     "worklog"

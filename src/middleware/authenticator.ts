@@ -6,7 +6,7 @@ import Debug from "debug";
 const log = Debug('wl:authenticator');
 
 const authenticator = (req: Request, res: Response, next: NextFunction) => {
-    if (req.path === '/signup' || req.path === '/signin') {
+    if (req.path.includes('/signup') || req.path.includes('/signin')) {
         return next();
     }
 
