@@ -1,7 +1,6 @@
 import express from 'express';
 import Debug from 'debug';
 import { appDataSource } from '../server';
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Worklog } from '../entities/Worklog';
 
 // log
