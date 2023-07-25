@@ -1,7 +1,7 @@
 config:
   target: "http://localhost:3000"
   phases:
-    - duration: 30
+    - duration: 5
       arrivalRate: 1
       name: Warm up phase
   payload:
@@ -11,7 +11,7 @@ config:
       - "password"
       - "email"
       - "date"
-      - "log"
+  processor: "./custom-processor.js"
 scenarios:
   - flow:
       - log: "Sign up"
@@ -33,6 +33,7 @@ scenarios:
       - log: "Post worklog"
       - post:
           url: "/worklog"
+          beforeRequest: "addLogArray"
           headers:
             authorization: "Bearer {{ token }}"
           json:
